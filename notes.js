@@ -1,5 +1,8 @@
 "use strict";
 window.addEventListener("load", () => {
+
+    new Promise(() => {});
+
     const app = new Vue({
         el: "#app",
         data: {
