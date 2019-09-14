@@ -48,7 +48,7 @@ window.addEventListener("load", () => {
                 this.sendNotes();
             },
             sendNotes(){
-               axios.post("http://localhost:9000", this.notes.filter(n => !n.deleted))
+               axios.post("https://kos-backend-notes.herokuapp.com/", this.notes.filter(n => !n.deleted))
                    .then((response) => {
                        this.infoMessage = response.data.message;
                        setTimeout(() => { this.infoMessage = "";}, 1800);
@@ -92,7 +92,7 @@ window.addEventListener("load", () => {
         // mounted выполняется сразу после того, как приложение было первый раз полностью отрисовано
         mounted() {
             // отправляем GET-запрос по указанному адресу
-            axios.get("http://localhost:9000")
+            axios.get("https://kos-backend-notes.herokuapp.com/")
                 .then((response) => {
                     // сохраняем в приложение данные, полученные на сервере
                     this.notes = response.data;
