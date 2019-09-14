@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>NotesApp</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="./css/index.css">
+</head>
+<body>
+<div class="container" id="app">
+    <h1 class="my-3">Список заметок</h1>
+    <button v-on:click="showNewNoteForm = !showNewNoteForm" class="btn btn-primary">Добавить заметку</button>
+    <div class="checkbox my-4">
+        <input v-model="showArchived" type="checkbox" id="showArchived">
+        <label for="showArchived">Показывать архивные</label>
+    </div>
+    <div v-if="showNewNoteForm" class="card my-4">
+        <div class="card-header">Добавление заметки</div>
+        <div class="card-body">
+            <div class="form-group">
+                <label for="text">Текст заметки</label>
+                <textarea
+                        v-on:keydown.ctrl.enter = "saveNote"
+                    v-model="newNoteText"
+                    id="text"
+                    class="form-control"
+                    v-bind:class="{ 'is-invalid' : formHasError, 'is-valid' : formIsValid }"
+                ></textarea>
+                <div v-if="formHasError" class="invalid-feedback">Заполните текст сообщения</div>
+            </div>
+            <button v-on:click="saveNote" class="btn btn-success">Сохранить</button>
+        </div>
+    </div>
+
+        <div v-if = "infoMessage.length >0 " class="alert alert-info">{{ infoMessage }}</div>
+
+    <div class="row mt-4">
+        <div v-for="note in filteredNotes" class="col-sm-3 mb-4">
+            <div v-if="!note.deleted" class="card" v-bind:class="{ 'bg-light border-secondary' : note.archived }">
+                <div class="card-body">
+                    {{ note.text }}<br>
+                    <em class="text-muted small">Дата: {{ note.createdAt | formatDate  }}</em>
+                </div>
+                <div class="card-footer">
+                    <button v-if="!note.archived" v-on:click="moveToArchive(note)" class="btn btn-sm btn-info">В архив</button>
+                    <button v-if="note.archived" v-on:click="returnFromArchive(note)" class="btn btn-sm btn-warning">Из архива</button>
+                    <button v-on:click="deleteNote(note)" class="btn btn-sm btn-danger">Удалить</button>
+                </div>
+            </div>
+            <div v-else class="card">
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        <span v-on:click="restoreNote(note)" class="btn btn-link">Восстановить</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="./notes.js"></script>
+</body>
+</html>
